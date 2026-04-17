@@ -1,6 +1,6 @@
 #!/bin/bash
 # =====================================================
-# Script: manage_rac_instances.sh
+# Script: services_check.sh
 # Purpose: services_check
 # Author: Jesus Bastidas
 # Env: Oracle 19c RAC
