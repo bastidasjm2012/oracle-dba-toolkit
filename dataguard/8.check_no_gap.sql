@@ -1,6 +1,6 @@
 
 -- =====================================================
--- Script: convert_snapshot_standby.sql
+-- Script: check_no_gap.sql
 -- Purpose: Validate Data Guard NO GAP
 -- Author: Jesus Bastidas
 -- Version: Oracle 19c
