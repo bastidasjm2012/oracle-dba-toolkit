@@ -1,5 +1,5 @@
 -- =====================================================
--- Script: convert_snapshot_standby.sql
+-- Script: check_last_applied.sql
 -- Purpose: -- Last applied and received logs
 -- Author: Jesus Bastidas
 -- Version: Oracle 19c
