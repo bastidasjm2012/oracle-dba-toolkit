@@ -1,2 +1,0 @@
--- Check Data Guard errors
-SELECT MESSAGE FROM V$DATAGUARD_STATUS;
