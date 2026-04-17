@@ -1,0 +1,2 @@
+# Corruption Check
+Use RMAN VALIDATE, DBVERIFY, ANALYZE
