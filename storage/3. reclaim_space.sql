@@ -1,8 +1,9 @@
 -- =====================================================
 -- Script: reclaim_space.sql
 -- Purpose: Identify reclaimable space in segments
+-- Author: Jesus Bastidas
+-- Environment: Oracle 19c
 -- =====================================================
-
 SELECT owner,
        segment_name,
        segment_type,
