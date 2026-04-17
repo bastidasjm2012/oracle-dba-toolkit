@@ -1,5 +1,5 @@
 -- =====================================================
--- Script: convert_snapshot_standby.sql
+-- Script: check_gap_and_errors.sql
 -- Purpose: Check Data Guard errors
 -- Author: Jesus Bastidas
 -- Version: Oracle 19c
