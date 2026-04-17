@@ -1,6 +1,6 @@
 #!/bin/bash
 # =====================================================
-# Script: manage_rac_instances.sh
+# Script: scan_listener_check.sh
 # Purpose: scan_listener_check
 # Author: Jesus Bastidas
 # Env: Oracle 19c RAC
