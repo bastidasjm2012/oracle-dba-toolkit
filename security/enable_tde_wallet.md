@@ -1,0 +1,208 @@
+# 🔐 Enable TDE Wallet (Oracle 19c) – Step-by-Step Guide
+
+## 📌 Overview
+
+This runbook describes how to configure **Transparent Data Encryption (TDE)** in Oracle Database 19c using a file-based keystore.
+
+It includes:
+
+* Wallet configuration
+* Keystore creation
+* Master key generation
+* Auto-login configuration
+* Validation steps
+
+This procedure was executed in a real Oracle 19c environment as part of security hardening.
+
+---
+
+## ⚙️ Prerequisites
+
+* Oracle Database 19c
+* SYSDBA privileges
+* OS access to the database server
+* Defined directory for wallet storage
+
+---
+
+## 🧭 Procedure
+
+### 🔹 Step 1 – Switch to Oracle user
+
+```bash
+sudo su - oracle
+```
+
+---
+
+### 🔹 Step 2 – Connect as SYSDBA
+
+```bash
+sqlplus / as sysdba
+```
+
+---
+
+### 🔹 Step 3 – Configure `wallet_root` (SPFILE)
+
+```sql
+ALTER SYSTEM SET wallet_root='/u01/app/oracle/product/19c/dbhome_1/wallet' SCOPE=SPFILE;
+```
+
+---
+
+### 🔹 Step 4 – Restart the database
+
+```sql
+shutdown immediate;
+startup;
+```
+
+---
+
+### 🔹 Step 5 – Configure TDE keystore type
+
+```sql
+ALTER SYSTEM SET tde_configuration='KEYSTORE_CONFIGURATION=FILE' SCOPE=BOTH;
+```
+
+---
+
+### 🔹 Step 6 – Create password-protected keystore
+
+```sql
+ADMINISTER KEY MANAGEMENT CREATE KEYSTORE IDENTIFIED BY "Ora_DB4U";
+```
+
+---
+
+### 🔹 Step 7 – Validate wallet files
+
+```bash
+ls -l /u01/app/oracle/product/19c/dbhome_1/wallet/tde
+```
+
+Expected file:
+
+* `ewallet.p12` → password-based keystore
+
+---
+
+### 🔹 Step 8 – Open keystore
+
+```sql
+ADMINISTER KEY MANAGEMENT SET KEYSTORE OPEN FORCE KEYSTORE IDENTIFIED BY "Ora_DB4U" CONTAINER=ALL;
+```
+
+---
+
+### 🔹 Step 9 – Validate wallet status
+
+```sql
+SELECT con_id, wallet_type, status
+FROM v$encryption_wallet;
+```
+
+Expected status:
+
+* `OPEN_NO_MASTER_KEY`
+
+---
+
+### 🔹 Step 10 – Create TDE master key
+
+```sql
+ADMINISTER KEY MANAGEMENT SET KEY IDENTIFIED BY "Ora_DB4U"
+WITH BACKUP USING 'backup'
+CONTAINER=ALL;
+```
+
+---
+
+### 🔹 Step 11 – Validate wallet after key creation
+
+```sql
+SELECT con_id, wallet_type, status
+FROM v$encryption_wallet;
+```
+
+Expected status:
+
+* `OPEN`
+
+---
+
+### 🔹 Step 12 – Enable auto-login keystore
+
+```sql
+ADMINISTER KEY MANAGEMENT CREATE AUTO_LOGIN KEYSTORE
+FROM KEYSTORE IDENTIFIED BY "Ora_DB4U";
+```
+
+---
+
+### 🔹 Step 13 – Close password-based keystore
+
+```sql
+ADMINISTER KEY MANAGEMENT SET KEYSTORE CLOSE IDENTIFIED BY "Ora_DB4U" CONTAINER=ALL;
+```
+
+---
+
+### 🔹 Step 14 – Validate auto-login configuration
+
+```sql
+SELECT con_id, wallet_type, status
+FROM v$encryption_wallet;
+```
+
+Expected status:
+
+* `AUTOLOGIN OPEN`
+
+---
+
+### 🔹 Step 15 – Verify wallet files
+
+```bash
+ls -l /u01/app/oracle/product/19c/dbhome_1/wallet/tde
+```
+
+Expected files:
+
+* `ewallet.p12` → password-based keystore
+* `cwallet.sso` → auto-login keystore
+* `ewallet_*_backup.p12` → backup file
+
+---
+
+## ✅ Validation Summary
+
+| Step               | Expected Result    |
+| ------------------ | ------------------ |
+| Wallet created     | ewallet.p12 exists |
+| Keystore opened    | OPEN_NO_MASTER_KEY |
+| Master key created | OPEN               |
+| Auto-login enabled | AUTOLOGIN OPEN     |
+
+---
+
+## ⚠️ Notes
+
+* Restart is required after setting `wallet_root`
+* Use secure passwords for keystore
+* Store wallet directory in protected location
+* Backup keystore files regularly
+
+---
+
+## 🧠 ACE Contribution
+
+This runbook demonstrates **real-world implementation of Oracle TDE**, including configuration, validation, and operational best practices in Oracle Database 19c environments.
+
+---
+
+## 👤 Author
+
+**Jesus Bastidas**
+Oracle DBA | OCI Certified | ACE Apprentice
