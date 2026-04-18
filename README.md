@@ -4,57 +4,44 @@
 
 This repository contains a comprehensive collection of **Oracle Database 19c DBA scripts and runbooks**, built from real-world operational scenarios.
 
-It demonstrates hands-on experience across key Oracle technologies, including:
-
-* Data Guard (High Availability)
-* RAC (Cluster Management)
-* SQL Performance (AWR / ASH / Tuning)
-* Storage & ASM
-* Security (TDE / DBMS_CRYPTO)
-* Integration (DB Links)
-* Multitenant Architecture (CDB / PDB)
+It demonstrates hands-on experience across key Oracle technologies.
 
 ---
 
-## 🧠 About this Project
+## 🧠 Modules
 
-This toolkit was developed as part of **practical DBA activities in enterprise environments**, including hybrid setups (on-premise + OCI).
-
-The goal is to provide:
-
-* reusable scripts
-* troubleshooting procedures
-* operational runbooks
-* real-world use cases
-
-All content reflects **hands-on Oracle product usage**, not theoretical examples.
+| Module      | Description                               |
+| ----------- | ----------------------------------------- |
+| dataguard   | High availability, failover, switchover   |
+| rac         | Cluster management and services           |
+| performance | SQL tuning, AWR/ASH analysis              |
+| storage     | ASM, tablespaces, growth, reclaim         |
+| security    | TDE, encryption, wallet, network security |
+| integration | DB links and connectivity                 |
+| multitenant | CDB/PDB administration                    |
+| docs        | Lab documentation and evidence            |
+| images      | Screenshots of real environments          |
 
 ---
 
-## 📂 Repository Structure
+## 🔐 Security Focus (Key Highlight)
 
-| Module      | Description                                                |
-| ----------- | ---------------------------------------------------------- |
-| dataguard   | Data Guard monitoring, lag analysis, failover & switchover |
-| rac         | RAC services, instances, SCAN, and failover validation     |
-| performance | SQL tuning, AWR/ASH analysis, profiles and baselines       |
-| storage     | ASM, tablespaces, reclaim space, growth analysis           |
-| security    | Encryption, TDE, wallet validation                         |
-| integration | Database links and connectivity                            |
-| multitenant | CDB/PDB management, application containers, triggers       |
-| docs        | Technical documentation (Hybrid Data Guard lab)            |
-| images      | Screenshots and evidence of product usage                  |
+This repository includes a complete Oracle security implementation covering:
+
+* Transparent Data Encryption (TDE)
+* Tablespace encryption (data at rest)
+* Oracle Net encryption (data in transit)
+* Wallet and keystore management
 
 ---
 
 ## 🔍 Real-World Usage
 
-The scripts and procedures in this repository have been used in:
+All scripts and procedures were executed in:
 
-* Oracle Database 19c Enterprise environments
-* Hybrid architectures (on-premise + Oracle Cloud Infrastructure)
-* Data Guard configurations (Primary / Standby)
-* RAC clusters
+* Oracle Database 19c environments
+* Hybrid architectures (on-premise + OCI)
+* Data Guard and RAC configurations
 * ASM-based storage environments
 
 ---
@@ -64,49 +51,44 @@ The scripts and procedures in this repository have been used in:
 This repository is part of an **Oracle ACE Apprentice submission** and includes:
 
 * ✔ Real DBA scripts used in production-like environments
-* ✔ Hybrid Active Data Guard implementation (OCI + on-prem simulation)
-* ✔ Operational runbooks (failover, switchover, troubleshooting)
-* ✔ Screenshots of Oracle Cloud and database configurations
-* ✔ SQL-based validation and monitoring queries
+* ✔ Hybrid Active Data Guard implementation
+* ✔ Security hardening procedures (TDE + Network Encryption)
+* ✔ Operational runbooks
+* ✔ Screenshots and lab documentation
 
-All activities were performed **after ACE Apprentice acceptance** and demonstrate real Oracle product usage.
+All activities were performed **after ACE Apprentice acceptance**.
 
 ---
 
 ## ⚙️ Example
 
-### Check Data Guard synchronization
-
 ```sql
-SELECT STATUS, GAP_STATUS
-FROM V$ARCHIVE_DEST_STATUS
-WHERE DEST_ID = 2;
+SELECT status, wallet_type
+FROM v$encryption_wallet;
 ```
 
 ---
 
-## 💼 Key Value
+## 💼 Value
 
-This repository focuses on:
+This repository provides:
 
 * Practical DBA operations
-* High availability scenarios
+* High availability solutions
 * Performance troubleshooting
-* Real-world Oracle environments
-
-It is intended for DBAs, engineers, and learners seeking **applied Oracle knowledge**.
+* Enterprise security implementation
 
 ---
 
 ## 🏷️ Tags
 
-Oracle | DBA | DataGuard | RAC | ASM | Performance | Multitenant | OCI
+Oracle | DBA | DataGuard | RAC | ASM | Security | TDE | OCI
 
 ---
 
 ## 👤 Author
 
-**Jesus Bastidas**
+Jesus Bastidas
 Oracle DBA | OCI Certified | ACE Apprentice
 
 ---
@@ -114,4 +96,3 @@ Oracle DBA | OCI Certified | ACE Apprentice
 ## 📜 License
 
 MIT License
-
