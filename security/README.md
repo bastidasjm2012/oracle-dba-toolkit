@@ -103,9 +103,9 @@ This runbook extends TDE configuration to enterprise environments:
 
 The following documents provide **step-by-step implementations with screenshots**:
 
-* `docs/enable_tde_oracle_19c.pdf`
-* `docs/encrypt_data_files_oracle_19c.pdf`
-* `docs/enable_network_encryption_oracle_19c.pdf`
+* `docs/enable_tde_oracle_19c_primary.pdf`
+* `docs/encrypt_data_file_oracle_19c_primary.pdf`
+* `docs/enable_network_encryption_oracle_19c_primary.pdf`
 
 ---
 
