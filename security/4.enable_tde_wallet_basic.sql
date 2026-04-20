@@ -42,6 +42,8 @@ PROMPT =====================================================
 PROMPT STEP 3 - Configure TDE keystore type
 PROMPT =====================================================
 
+SHOW PARAMETER WALLET_ROOT
+
 ALTER SYSTEM SET tde_configuration='KEYSTORE_CONFIGURATION=FILE' SCOPE=BOTH;
 
 SHOW PARAMETER TDE_CONFIGURATION
