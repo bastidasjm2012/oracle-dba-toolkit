@@ -1,0 +1,312 @@
+# 🔐 Enable TDE in Multitenant (Oracle 19c) – CDB/PDB Enterprise Runbook
+
+## 📌 Overview
+
+This runbook describes how to implement **Transparent Data Encryption (TDE)** in an Oracle Database 19c **Multitenant environment (CDB/PDB)** using a unified keystore.
+
+It includes:
+
+* Wallet configuration
+* Keystore creation and management
+* Master key creation (CDB and PDB)
+* Multitenant validation
+* Tablespace encryption (online)
+* Key lifecycle and validation
+
+This procedure reflects **real-world DBA execution in enterprise environments**.
+
+---
+
+## ⚙️ Prerequisites
+
+* Oracle Database 19c (Multitenant enabled)
+* SYSDBA privileges
+* OS access to the database server
+* Wallet directory defined
+
+---
+
+## 🧭 Procedure
+
+---
+
+## 🔹 Step 1 – Connect to CDB
+
+```bash id="m9z3xq"
+sqlplus / as sysdba
+```
+
+---
+
+## 🔹 Step 2 – Verify PDB status
+
+```sql id="n2w5dk"
+SHOW PDBS;
+```
+
+If PDBs are not open:
+
+```sql id="p8t2rl"
+ALTER PLUGGABLE DATABASE ALL OPEN INSTANCES=ALL;
+ALTER PLUGGABLE DATABASE ORCLPDB SAVE STATE;
+```
+
+---
+
+## 🔹 Step 3 – Validate TDE parameters
+
+```sql id="z3k1pt"
+SHOW PARAMETER WALLET_ROOT;
+SHOW PARAMETER TDE_CONFIGURATION;
+```
+
+---
+
+## 🔹 Step 4 – Configure wallet_root
+
+```sql id="g7p4ld"
+ALTER SYSTEM SET wallet_root='/u01/app/oracle/product/19c/dbhome_1/wallet' SCOPE=SPFILE;
+```
+
+---
+
+## 🔹 Step 5 – Restart database
+
+```sql id="s8n1vp"
+shutdown immediate;
+startup;
+```
+
+---
+
+## 🔹 Step 6 – Configure keystore type
+
+```sql id="q5r2xa"
+ALTER SYSTEM SET tde_configuration='KEYSTORE_CONFIGURATION=FILE' SCOPE=BOTH;
+```
+
+---
+
+## 🔹 Step 7 – Create keystore
+
+```sql id="w4m9yb"
+ADMINISTER KEY MANAGEMENT CREATE KEYSTORE IDENTIFIED BY "Ora_DB4U";
+```
+
+---
+
+## 🔹 Step 8 – Validate wallet (initial state)
+
+```sql id="t1k8ye"
+SELECT con_id, status, wallet_type
+FROM v$encryption_wallet;
+```
+
+Expected:
+
+* `CLOSED`
+
+---
+
+## 🔹 Step 9 – Open keystore (CDB + PDB)
+
+```sql id="c3x8pv"
+ADMINISTER KEY MANAGEMENT SET KEYSTORE OPEN FORCE KEYSTORE IDENTIFIED BY "Ora_DB4U" CONTAINER=ALL;
+```
+
+---
+
+## 🔹 Step 10 – Validate wallet across containers
+
+```sql id="u6b2kz"
+SELECT a.con_id,
+       b.name,
+       a.wrl_type,
+       a.wrl_parameter,
+       a.wallet_type,
+       a.status
+FROM v$encryption_wallet a
+LEFT JOIN v$pdbs b
+ON a.con_id = b.con_id
+ORDER BY a.con_id;
+```
+
+Expected:
+
+* CON_ID 1 → CDB root
+* CON_ID 2 → PDB$SEED
+* CON_ID 3 → ORCLPDB
+* Status: `OPEN_NO_MASTER_KEY`
+
+---
+
+## 🔹 Step 11 – Create master key (CDB + PDB$SEED)
+
+```sql id="y9l4zt"
+ADMINISTER KEY MANAGEMENT SET KEY IDENTIFIED BY "Ora_DB4U"
+WITH BACKUP;
+```
+
+---
+
+## 🔹 Step 12 – Create master key at PDB level
+
+```sql id="v8s2qn"
+ALTER SESSION SET CONTAINER=ORCLPDB;
+
+ADMINISTER KEY MANAGEMENT SET KEY IDENTIFIED BY "Ora_DB4U"
+WITH BACKUP;
+```
+
+---
+
+## 🔹 Step 13 – Validate key distribution
+
+```sql id="j3x7fw"
+SELECT p.con_id,
+       p.name,
+       p.open_mode,
+       ek.key_id
+FROM v$pdbs p
+LEFT JOIN v$encryption_keys ek
+ON p.con_id = ek.con_id
+ORDER BY p.con_id;
+```
+
+---
+
+## 🔹 Step 14 – Create auto-login keystore
+
+```sql id="n4w6bx"
+ADMINISTER KEY MANAGEMENT CREATE AUTO_LOGIN KEYSTORE
+FROM KEYSTORE IDENTIFIED BY "Ora_DB4U";
+```
+
+---
+
+## 🔹 Step 15 – Validate wallet mode
+
+```sql id="d7k2qp"
+SELECT con_id, wallet_type, status
+FROM v$encryption_wallet;
+```
+
+Expected:
+
+* `AUTOLOGIN OPEN`
+
+---
+
+# 💾 Tablespace Encryption (Data at Rest)
+
+## 🔹 Step 16 – Encrypt tablespace at CDB level
+
+```sql id="r5m1uk"
+ALTER TABLESPACE USERS ENCRYPTION ONLINE ENCRYPT;
+```
+
+Validate:
+
+```sql id="t9x2cp"
+SELECT tablespace_name, encrypted
+FROM dba_tablespaces;
+```
+
+---
+
+## 🔹 Step 17 – Encrypt tablespace at PDB level
+
+```sql id="b2v9ny"
+ALTER SESSION SET CONTAINER=ORCLPDB;
+
+ALTER TABLESPACE USERS ENCRYPTION ONLINE ENCRYPT;
+```
+
+---
+
+## 🔹 Step 18 – Optional validation
+
+```sql id="e1r8kx"
+SELECT KEYSTORE_MODE FROM V$ENCRYPTION_WALLET;
+
+SELECT MASTERKEYID FROM v$database_key_info;
+```
+
+---
+
+## 🔹 Step 19 – Optional decryption
+
+```sql id="c9l5jq"
+ALTER TABLESPACE USERS ENCRYPTION ONLINE DECRYPT;
+```
+
+---
+
+# 🔐 Multitenant Architecture Notes
+
+* CON_ID 1 → CDB root
+* CON_ID 2 → PDB$SEED
+* CON_ID >2 → user PDBs
+
+TDE operates in:
+
+* **Unified mode** → shared keystore
+* **Isolated mode** → per-PDB keystore
+
+This runbook uses **Unified Mode**.
+
+---
+
+# 🛡️ Advanced Security (Optional)
+
+TDE master keys can be stored in:
+
+* Software wallet
+* Hardware Security Module (HSM)
+
+Using HSM improves:
+
+* Security
+* Compliance
+* Key protection
+
+---
+
+# ✅ Validation Summary
+
+| Phase                | Expected Result    |
+| -------------------- | ------------------ |
+| Wallet created       | CLOSED             |
+| Wallet opened        | OPEN_NO_MASTER_KEY |
+| Key created          | OPEN               |
+| Auto-login           | AUTOLOGIN OPEN     |
+| Tablespace encrypted | ENCRYPTED=YES      |
+
+---
+
+# ⚠️ Notes
+
+* Restart required after setting `wallet_root`
+* Always validate PDB state before encryption
+* Backup keystore files regularly
+* Protect wallet directory at OS level
+
+---
+
+# 🧠 ACE Contribution
+
+This runbook demonstrates:
+
+* Multitenant TDE implementation
+* Key lifecycle management
+* Encryption across CDB/PDB
+* Real-world Oracle security operations
+
+All steps were executed in a **hands-on lab/OCI environment**.
+
+---
+
+# 👤 Author
+
+**Jesus Bastidas**
+Oracle DBA | OCI Certified | ACE Apprentice
