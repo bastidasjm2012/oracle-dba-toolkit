@@ -56,6 +56,8 @@ PROMPT =====================================================
 PROMPT STEP 4 - Configure TDE keystore type
 PROMPT =====================================================
 
+SHOW PARAMETER WALLET_ROOT
+
 ALTER SYSTEM SET tde_configuration='KEYSTORE_CONFIGURATION=FILE' SCOPE=BOTH;
 
 SHOW PARAMETER TDE_CONFIGURATION
@@ -90,6 +92,9 @@ PROMPT =====================================================
 PROMPT STEP 8 - Validate wallet across containers
 PROMPT =====================================================
 
+SET LINESIZE 200
+SET PAGESIZE 100
+       
 COLUMN CON_ID        FORMAT 999        HEADING 'CID'
 COLUMN NAME          FORMAT A15        HEADING 'PDB_NAME'
 COLUMN WRL_TYPE      FORMAT A15        HEADING 'WRL_TYPE'
@@ -112,7 +117,8 @@ PROMPT =====================================================
 PROMPT STEP 9 - Create master key at CDB level
 PROMPT =====================================================
 
-ADMINISTER KEY MANAGEMENT SET KEY IDENTIFIED BY "Ora_DB4U" WITH BACKUP;
+ADMINISTER KEY MANAGEMENT SET KEY IDENTIFIED BY "Ora_DB4U" WITH BACKUP USING 'backup'
+CONTAINER=ALL;
 
 PROMPT =====================================================
 PROMPT STEP 10 - Create master key at PDB level
@@ -132,6 +138,9 @@ PROMPT =====================================================
 PROMPT STEP 12 - Validate key distribution
 PROMPT =====================================================
 
+SET LINESIZE 200
+SET PAGESIZE 100
+       
 COLUMN CON_ID    FORMAT 999
 COLUMN NAME      FORMAT A15
 COLUMN OPEN_MODE FORMAT A12
@@ -153,8 +162,18 @@ PROMPT =====================================================
 ADMINISTER KEY MANAGEMENT CREATE AUTO_LOGIN KEYSTORE FROM KEYSTORE IDENTIFIED BY "Ora_DB4U";
 
 PROMPT =====================================================
-PROMPT STEP 14 - Validate final wallet mode
+PROMPT STEP 14 - Close password-based keystore
 PROMPT =====================================================
+
+ADMINISTER KEY MANAGEMENT SET KEYSTORE CLOSE IDENTIFIED BY "Ora_DB4U" CONTAINER=ALL;
+
+
+PROMPT =====================================================
+PROMPT STEP 15 - Validate final wallet mode
+PROMPT =====================================================
+
+SET LINESIZE 200
+SET PAGESIZE 100
 
 COLUMN CON_ID      FORMAT 999
 COLUMN WALLET_TYPE FORMAT A20
@@ -167,7 +186,7 @@ FROM v$encryption_wallet
 ORDER BY con_id;
 
 PROMPT =====================================================
-PROMPT STEP 15 - Optional tablespace encryption at PDB level
+PROMPT STEP 16 - Optional tablespace encryption at PDB level
 PROMPT =====================================================
 PROMPT To encrypt USERS tablespace in ORCLPDB, execute manually:
 PROMPT ALTER SESSION SET CONTAINER=ORCLPDB;
@@ -175,8 +194,11 @@ PROMPT ALTER TABLESPACE USERS ENCRYPTION ONLINE ENCRYPT;
 PROMPT
 
 PROMPT =====================================================
-PROMPT STEP 16 - Optional advanced validation
+PROMPT STEP 17 - Optional advanced validation
 PROMPT =====================================================
+
+SET LINESIZE 200
+SET PAGESIZE 100
 
 COLUMN KEYSTORE_MODE FORMAT A20
 SELECT KEYSTORE_MODE
