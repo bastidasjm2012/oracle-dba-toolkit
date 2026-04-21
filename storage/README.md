@@ -6,7 +6,7 @@ Collection of scripts and runbooks for managing storage in Oracle Database 19c e
 
 ---
 
-## 🧠 Environment
+##  Environment
 
 * Oracle Database 19c
 * ASM (Automatic Storage Management)
@@ -14,9 +14,9 @@ Collection of scripts and runbooks for managing storage in Oracle Database 19c e
 
 ---
 
-## 🔧 Storage Operations
+##  Storage Operations
 
-### 📊 Monitoring & Analysis
+###  Monitoring & Analysis
 
 * [`tablespace_usage.sql`](tablespace_usage.sql)
 * [`segment_growth_analysis.sql`](segment_growth_analysis.sql)
@@ -24,7 +24,7 @@ Collection of scripts and runbooks for managing storage in Oracle Database 19c e
 
 ---
 
-### 🛠️ Maintenance & Optimization
+###  Maintenance & Optimization
 
 * [`reclaim_space.sql`](reclaim_space.sql)
 * [`datafile_resize_candidates.sql`](datafile_resize_candidates.sql)
@@ -32,9 +32,9 @@ Collection of scripts and runbooks for managing storage in Oracle Database 19c e
 
 ---
 
-## 🚀 Real-World Runbooks
+##  Real-World Runbooks
 
-### 🔹 ACFS Online Expansion (Zero Downtime)
+###  ACFS Online Expansion (Zero Downtime)
 
 Production scenario demonstrating online filesystem expansion over ASM without service interruption.
 
@@ -46,7 +46,7 @@ Production scenario demonstrating online filesystem expansion over ASM without s
 
 ---
 
-## 🧠 Key Capabilities
+##  Key Capabilities
 
 * Tablespace monitoring and growth analysis
 * Storage optimization and space reclamation
@@ -57,7 +57,7 @@ Production scenario demonstrating online filesystem expansion over ASM without s
 
 ---
 
-## 🏆 ACE Contribution
+##  ACE Contribution
 
 This module demonstrates hands-on Oracle storage management aligned with real production scenarios.
 
@@ -70,7 +70,7 @@ It includes:
 
 ---
 
-## 👤 Author
+##  Author
 
 Jesus Bastidas
 Oracle DBA | OCI Certified | ACE Apprentice
