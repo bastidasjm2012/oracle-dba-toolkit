@@ -1,6 +1,6 @@
-# 🚀 Oracle DBA Toolkit (19c) – Real-World Scripts & Runbooks
+#  Oracle DBA Toolkit (19c) – Real-World Scripts & Runbooks
 
-## 📌 Overview
+##  Overview
 
 This repository contains a comprehensive collection of **Oracle Database 19c DBA scripts and runbooks**, built from real-world operational scenarios.
 
@@ -8,7 +8,7 @@ It demonstrates hands-on experience across key Oracle technologies.
 
 ---
 
-## 🧠 Modules
+##  Modules
 
 | Module      | Description                               |
 | ----------- | ----------------------------------------- |
@@ -24,7 +24,7 @@ It demonstrates hands-on experience across key Oracle technologies.
 
 ---
 
-## 🔐 Security Focus (Key Highlight)
+##  Security Focus (Key Highlight)
 
 This repository includes a complete Oracle security implementation covering:
 
@@ -35,7 +35,7 @@ This repository includes a complete Oracle security implementation covering:
 
 ---
 
-## 🔍 Real-World Usage
+##  Real-World Usage
 
 All scripts and procedures were executed in:
 
@@ -46,7 +46,7 @@ All scripts and procedures were executed in:
 
 ---
 
-## 📎 Evidence of Product Usage
+##  Evidence of Product Usage
 
 This repository is part of an **Oracle ACE Apprentice submission** and includes:
 
@@ -60,7 +60,7 @@ All activities were performed **after ACE Apprentice acceptance**.
 
 ---
 
-## ⚙️ Example
+##  Example
 
 ```sql
 SELECT status, wallet_type
@@ -69,7 +69,7 @@ FROM v$encryption_wallet;
 
 ---
 
-## 💼 Value
+##  Value
 
 This repository provides:
 
@@ -80,13 +80,13 @@ This repository provides:
 
 ---
 
-## 🏷️ Tags
+##  Tags
 
 Oracle | DBA | DataGuard | RAC | ASM | Security | TDE | OCI
 
 ---
 
-## 👤 Author
+##  Author
 
 Jesus Bastidas
 Oracle DBA | OCI Certified | ACE Apprentice
