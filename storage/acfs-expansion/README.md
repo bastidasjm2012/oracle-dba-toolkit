@@ -1,6 +1,6 @@
 # Oracle ACFS Online Filesystem Expansion (ASM) – Production Scenario
 
-## 📌 Overview
+##  Overview
 
 This document describes a real-world ACFS filesystem expansion performed online over Oracle ASM without downtime.
 
@@ -8,7 +8,7 @@ The scenario was executed in a production environment using Oracle Database 19c 
 
 ---
 
-## 🚀 Why this matters
+##  Why this matters
 
 In enterprise environments:
 
@@ -24,7 +24,7 @@ Oracle ACFS provides:
 
 ---
 
-## 🧭 Architecture Context
+##  Architecture Context
 
 * Oracle Database 19c SE2
 * Active-Passive HA (non-RAC)
@@ -33,9 +33,9 @@ Oracle ACFS provides:
 
 ---
 
-## 🛠️ Procedure
+##  Procedure
 
-### 🔹 Step 1 – Validate filesystem
+###  Step 1 – Validate filesystem
 
 ```bash
 acfsutil info fs /ORABKP
@@ -47,7 +47,7 @@ acfsutil info fs /ORABKP
 
 ---
 
-### 🔹 Step 2 – Validate ASM volume
+###  Step 2 – Validate ASM volume
 
 ```bash
 asmcmd volinfo -G DATA ORABKP
@@ -59,7 +59,7 @@ asmcmd volinfo -G DATA ORABKP
 
 ---
 
-### 🔹 Step 3 – Validate diskgroup space
+###  Step 3 – Validate diskgroup space
 
 ```bash
 asmcmd lsdg DATA
@@ -71,7 +71,7 @@ asmcmd lsdg DATA
 
 ---
 
-### 🔹 Step 4 – Perform online expansion
+###  Step 4 – Perform online expansion
 
 ```bash
 acfsutil size +200G /ORABKP
@@ -85,7 +85,7 @@ acfsutil size +200G /ORABKP
 
 ---
 
-### 🔹 Step 5 – Validate at OS level
+###  Step 5 – Validate at OS level
 
 ```bash
 df -h /ORABKP
@@ -97,7 +97,7 @@ df -h /ORABKP
 
 ---
 
-### 🔹 Step 6 – Validate in ASM
+###  Step 6 – Validate in ASM
 
 ```bash
 asmcmd volinfo -G DATA ORABKP
@@ -109,7 +109,7 @@ asmcmd volinfo -G DATA ORABKP
 
 ---
 
-### 🔹 Step 7 – Final diskgroup validation
+###  Step 7 – Final diskgroup validation
 
 ```bash
 asmcmd lsdg DATA
@@ -121,19 +121,19 @@ asmcmd lsdg DATA
 
 ---
 
-## ⚙️ Automation Script
+##  Automation Script
 
 See: `acfs_online_resize.sh`
 
 ---
 
-## 🧪 SQL Validation
+##  SQL Validation
 
 See: `acfs_validation.sql`
 
 ---
 
-## ✅ Final Validation
+##  Final Validation
 
 * Filesystem expanded successfully
 * No downtime occurred
@@ -142,7 +142,7 @@ See: `acfs_validation.sql`
 
 ---
 
-## 🧠 My Contribution
+##  My Contribution
 
 This contribution demonstrates a real production execution of ACFS filesystem expansion over ASM.
 
@@ -157,7 +157,7 @@ This reflects real-world DBA operational practices in critical environments.
 
 ---
 
-## 📘 Key Learnings
+##  Key Learnings
 
 * ACFS supports fully online filesystem expansion
 * Incremental resizing reduces operational risk
@@ -166,13 +166,13 @@ This reflects real-world DBA operational practices in critical environments.
 
 ---
 
-## 🏁 Conclusion
+##  Conclusion
 
 Oracle ASM and ACFS together provide a robust enterprise storage solution enabling safe, scalable, and zero-downtime operations.
 
 ---
 
-## 👤 Author
+##  Author
 
 Jesus Bastidas
 Oracle DBA | OCI Certified | ACE Apprentice
